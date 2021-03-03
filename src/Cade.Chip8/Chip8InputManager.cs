@@ -1,19 +1,15 @@
+using System;
 using System.Collections.Generic;
 using Cade.Common.Interfaces;
 using Cade.Common.Models;
 
 namespace Cade.Chip8
 {
-    public class Chip8InputManager : ICadeInputManager
+    public sealed class Chip8InputManager : ICadeInputManager
     {
-        public List<Input> inputs { get; }
-        public int MaxPlayers { get; }
-
-        public Chip8InputManager()
+        private static Lazy<List<Input>> _lazy = new Lazy<List<Input>>(() => new List<Input>
         {
-            inputs = new List<Input>
-            {
-                new Input
+            new Input
                 {
                     Name = "Button 1",
                     Active = false,
@@ -133,9 +129,22 @@ namespace Cade.Chip8
                     Player = 1,
                     Type = InputType.Button
                 }
-            };
+        });
 
-            MaxPlayers = 1;
+        public List<Input> Inputs()
+        {
+            return _lazy.Value;
+        }
+
+        public void Update(List<Input> inputs)
+        {
+            
+            _lazy = new Lazy<List<Input>>(() => inputs);
+        }
+
+        int ICadeInputManager.MaxPlayers()
+        {
+            return 1;
         }
     }
 }
