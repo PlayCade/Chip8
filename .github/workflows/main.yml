@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set Environment Variables
+      run: |
+        echo "version_suffix=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+    - name: Build Common Library
+      run: |
+        mkdir ${{ github.workspace }}/package
+        cd src
+        dotnet build --configuration Release --version-suffix CI-${{ env.version_suffix }} --output ${{ github.workspace }}/package
+    - name: Upload Common Library CI Build
+      uses: actions/upload-artifact@v1
+      with:
+        name: Build
+        path: ${{ github.workspace }}/package
