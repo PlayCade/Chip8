@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cade.Chip8
+namespace Cade.Chip8.Core
 {
     public class Chip8
     {
